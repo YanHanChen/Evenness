@@ -14,6 +14,6 @@ Imports:
     reshape2,
     ggpubr,
     ggplot2,
-    ade4,
-    ape
+Remotes:
+    r-chaolab2019/chaoUtility
 RoxygenNote: 6.1.1

@@ -122,8 +122,7 @@ qD <- function(p,q){
 #' data(Alpine)
 #' data(tree_Alpine)
 #' out0 <- dis1(x = Alpine, q = 0, type = "phy", tree = tree_Alpine)
-#' @importFrom ade4 newick2phylog
-#' @importFrom ape write.tree
+#' @importFrom chaoUtility phylo2chaolabphy
 #' @export
 dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
   if(type2 == "species"){
@@ -153,7 +152,7 @@ dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
       CqN <- UqN
     }
   }else{
-    tree <- newick2phylog(write.tree(tree),add.tools = FALSE)
+    tree <- phylo2chaolabphy(tree)
     Li <- c(tree$leaves, tree$nodes)
     cumtree = function(a, tree){
       a <- a[names(tree$leaves)]
