@@ -231,7 +231,7 @@ dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
 draw_dis_spe <- function(x, title_name, type = "tax"){
   colnames(x) <- c("q = 0", "q = 1", "q = 2")
   x <- melt(x)
-  g <- ggplot(x, aes(x = as.factor("Var1"), y = "value", fill = "Var2"))+
+  g <- ggplot(x, aes(x = as.factor(Var1), y = value, fill = Var2))+
     geom_col(width = 0.2)+
     facet_grid(Var2~., scales = "free_y")+
     theme_bw()+
