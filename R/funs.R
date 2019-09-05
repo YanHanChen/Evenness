@@ -153,6 +153,9 @@ dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
     }
   }else{
     tree <- phylo2chaolabphy(tree)
+    parts_nms <- rev(names(tree$parts))
+    tree$parts <- lapply(length(tree$parts):1, function(i){tree$parts[[i]]})
+    names(tree$parts) <- parts_nms
     Li <- c(tree$leaves, tree$nodes)
     cumtree = function(a, tree){
       a <- a[names(tree$leaves)]
