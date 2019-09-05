@@ -15,5 +15,5 @@ Imports:
     ggpubr,
     ggplot2,
 Remotes:
-    r-chaolab2019/chaoUtility
+    github::chaolab2019/chaoUtility
 RoxygenNote: 6.1.1
