@@ -51,7 +51,6 @@ gg_evenness <- function(x){
             legend.text = element_text(size = 12),
             strip.text = element_text(size = 14),
             legend.position = "bottom")+
-      scale_x_discrete(breaks=seq(0, 2, 0.5))+
       theme(legend.key.width = unit(2,"cm"))+
       theme(plot.title = element_text(size=20, face="bold.italic",hjust = 0.5))+
       ggtitle(evetype)+
