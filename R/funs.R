@@ -41,8 +41,8 @@ gg_evenness <- function(x){
     x_1$q <- qs
     x_1 <- melt(x_1, id.vars = c("q"))
     names(x_1) <- c("q", "Site", "evenness")
-    out <- ggplot(x_1, aes("q", "evenness"))+
-      geom_line(aes(color = "Site", group = "Site", linetype = "Site"), size = 1.1)+
+    out <- ggplot(x_1, aes(q, evenness))+
+      geom_line(aes(color = Site, group = Site, linetype = Site), size = 1.1)+
       scale_linetype_manual(values=c("dashed", "1111", "solid"))+
       theme_bw()+
       theme(axis.title = element_text(size = 14),
@@ -51,7 +51,6 @@ gg_evenness <- function(x){
             legend.text = element_text(size = 12),
             strip.text = element_text(size = 14),
             legend.position = "bottom")+
-      scale_x_discrete(breaks=seq(0, 2, 0.5))+
       theme(legend.key.width = unit(2,"cm"))+
       theme(plot.title = element_text(size=20, face="bold.italic",hjust = 0.5))+
       ggtitle(evetype)+
