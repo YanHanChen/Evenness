@@ -20,6 +20,7 @@ a ggplot2 object showing the contribution of each species/node.
 \code{draw_dis_spe} plots the contribution of each species/node to dissimilarity (Jaccard-type dissimilarity and Sorensen-type dissimilarity).
 }
 \examples{
+\donttest{
 #Taxonomic analysis example
 data(Alpine)
 out0 <- dis1(x = Alpine, q = 0, type = "tax")
@@ -39,4 +40,5 @@ phy_UqN_r <- cbind(out0[, 1], out1[, 1], out2[, 1])
 phy_CqN_r <- cbind(out0[, 2], out1[, 2], out2[, 2])
 draw_dis_spe(phy_UqN_r, "Jaccard-type phylogenetic dissimilarity", type = "phy")
 draw_dis_spe(phy_CqN_r, "Sorensen-type phylogenetic dissimilarity", type = "phy")
+}
 }

@@ -3,13 +3,20 @@
 #' of only one assemblage (site), dat should be a numeric vector of species frequency.
 #' @param q a vector of diversity orders: user must specify a vector (default  is from 0 to 2 in an increment
 #' of 0.1)
+#' @param nboot an integer specifying the number of bootstrap times to build confidence interval. Use 0 to skip bootstrap.
+#' @param conf a number between 0 and 1 specifying the confidence level. Default is 0.95.
+#' @import stats
+#' @importFrom tibble tibble
+#' @importFrom chaoUtility Boot_p
 #' @return a list of N dataframes, where N is the number of assemblages (sites). Each data.frame shows
 #' the profiles of all six classes of evenness indices listed in Chao and Ricotta (2019) Ecology paper.
 #' @examples
 #' data(Alpine)
 #' out1 <- Evenness(data = Alpine)
+#' data(AlpineInt)
+#' out2 <- Evenness(data = AlpineInt,q = seq(0, 2, 0.1), nboot = 50)
 #' @export
-Evenness <- function(data, q = seq(0, 2, 0.1)){
+Evenness <- function(data, q = seq(0, 2, 0.1), nboot = 0, conf = 0.95){
   if(class(data)== "data.frame"||class(data)== "matrix"){
     mydata <- lapply(1:ncol(data), function(i) data[,i])
     names(mydata) <- colnames(data)
@@ -17,17 +24,43 @@ Evenness <- function(data, q = seq(0, 2, 0.1)){
     mydata <- list(data)
     names(mydata) <- "data"
   }
-  output <- lapply(mydata, function(x) cbind(q = q,new_fun(x = x, q.order = q)))
-return(output)
+  mydata <- lapply(mydata, function(x) x[x>0])
+  if(sum(sapply(mydata, function(x) sum(x)==1))>0) nboot = 0
+  if(nboot>1){
+    qtile <- qnorm(1-(1-conf)/2)
+    ans <- lapply(mydata, function(x){
+      p_b <- Boot_p(x,zero=FALSE,Bootype="One",datatype="abundance")
+      data_b <- rmultinom(n = nboot,size = sum(x),prob = p_b)
+      est <- as.vector(new_fun(x = x, q.order = q))
+      ses <- apply(apply(data_b,2,function(x_b){as.vector(new_fun(x = x_b, q.order = q))}),1,sd)
+      E_type <- rep(paste0("E",1:6),each = length(q))
+      output <- tibble(q = rep(q,6),E_type = E_type,Evenness = est,
+                       LCL = est - qtile*ses, UCL = est + qtile*ses)
+      output$LCL[ output$LCL < 0] <- 0
+      output$LCL[ output$UCL > 1] <- 1
+      output
+    })
+  }else{
+    ans <- lapply(mydata, function(x){
+      est <- as.vector(new_fun(x = x, q.order = q))
+      E_type <- rep(paste0("E",1:6),each = length(q))
+      output <- tibble(q = rep(q,6),E_type = E_type,Evenness = est,
+                       LCL = est , UCL = est)
+    })
+  }
+
+return(ans)
 }
 
 #' \code{gg_evenness}: use ggplot2 and ggpubr to plot the outcome of function \code{Evenness}.
 #' @param x a optput of \code{Evenness}
 #' @return return a ggplot2 object
 #' @examples
-#' data(Alpine)
-#' out1 <- Evenness(data = Alpine)
-#' gg_evenness(out1)
+#' \donttest{
+#' data(AlpineInt)
+#' out2 <- Evenness(data = AlpineInt,q = seq(0, 2, 0.1), nboot = 50)
+#' gg_evenness(out2)
+#' }
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @importFrom ggpubr ggarrange
@@ -114,6 +147,7 @@ qD <- function(p,q){
 #' @param tree the pylo object of the phylogenetic tree of all assemblages. Needed only if \code{type="phy"}.
 #' @return a data frame tabulating the contribution of each species/node to the two types of dissimilarity measures: Jaccard-type (1-U_qN) and Sorensen-type (1-C_qN)
 #' @examples
+#' \donttest{
 #' #Taxonomic analysis example
 #' data(Alpine)
 #' out0 <- dis1(x = Alpine, q = 0, type = "tax")
@@ -121,7 +155,8 @@ qD <- function(p,q){
 #' data(Alpine)
 #' data(tree_Alpine)
 #' out0 <- dis1(x = Alpine, q = 0, type = "phy", tree = tree_Alpine)
-#' @importFrom chaoUtility phylo2chaolabphy
+#' }
+#' @import chaoUtility
 #' @export
 dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
   if(type2 == "species"){
@@ -205,6 +240,7 @@ dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
 #' @param type a string specifying the type of contribution: "tax" for taxonomic and "phy" for phylogenetic
 #' @return a ggplot2 object showing the contribution of each species/node.
 #' @examples
+#' \donttest{
 #' #Taxonomic analysis example
 #' data(Alpine)
 #' out0 <- dis1(x = Alpine, q = 0, type = "tax")
@@ -224,6 +260,7 @@ dis1 <- function(x, q, type = "tax", type2 = "species", tree = NULL){
 #' phy_CqN_r <- cbind(out0[, 2], out1[, 2], out2[, 2])
 #' draw_dis_spe(phy_UqN_r, "Jaccard-type phylogenetic dissimilarity", type = "phy")
 #' draw_dis_spe(phy_CqN_r, "Sorensen-type phylogenetic dissimilarity", type = "phy")
+#' }
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @export

@@ -16,7 +16,9 @@ return a ggplot2 object
 \code{gg_evenness}: use ggplot2 and ggpubr to plot the outcome of function \code{Evenness}.
 }
 \examples{
-data(Alpine)
-out1 <- Evenness(data = Alpine)
-gg_evenness(out1)
+\donttest{
+data(AlpineInt)
+out2 <- Evenness(data = AlpineInt,q = seq(0, 2, 0.1), nboot = 50)
+gg_evenness(out2)
+}
 }

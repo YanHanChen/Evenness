@@ -4,7 +4,7 @@
 \alias{Evenness}
 \title{\code{Evenness}: compute six evenness indices of order q.}
 \usage{
-Evenness(data, q = seq(0, 2, 0.1))
+Evenness(data, q = seq(0, 2, 0.1), nboot = 0, conf = 0.95)
 }
 \arguments{
 \item{data}{a data.frame, matrix or list of observed species-by-assemblage frequency vector. For the case
@@ -12,6 +12,10 @@ of only one assemblage (site), dat should be a numeric vector of species frequen
 
 \item{q}{a vector of diversity orders: user must specify a vector (default  is from 0 to 2 in an increment
 of 0.1)}
+
+\item{nboot}{an integer specifying the number of bootstrap times to build confidence interval. Use 0 to skip bootstrap.}
+
+\item{conf}{a number between 0 and 1 specifying the confidence level. Default is 0.95.}
 }
 \value{
 a list of N dataframes, where N is the number of assemblages (sites). Each data.frame shows
@@ -23,4 +27,6 @@ the profiles of all six classes of evenness indices listed in Chao and Ricotta (
 \examples{
 data(Alpine)
 out1 <- Evenness(data = Alpine)
+data(AlpineInt)
+out2 <- Evenness(data = AlpineInt,q = seq(0, 2, 0.1), nboot = 50)
 }

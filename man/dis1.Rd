@@ -27,6 +27,7 @@ a data frame tabulating the contribution of each species/node to the two types o
 \code{dis1}: computes the contribution of each species/node to the two types of dissimilarity measures.
 }
 \examples{
+\donttest{
 #Taxonomic analysis example
 data(Alpine)
 out0 <- dis1(x = Alpine, q = 0, type = "tax")
@@ -34,4 +35,5 @@ out0 <- dis1(x = Alpine, q = 0, type = "tax")
 data(Alpine)
 data(tree_Alpine)
 out0 <- dis1(x = Alpine, q = 0, type = "phy", tree = tree_Alpine)
+}
 }

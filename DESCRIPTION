@@ -1,7 +1,7 @@
 Package: Evenness
 Type: Package
 Title: Evenness and dissimilarity
-Version: 0.1.0
+Version: 0.2.0
 Author: Chaolab
 Maintainer: <yhchen.st03g@g2.nctu.edu.tw>
 Description: compute six classes of evenness indice and the contribution to dissimilarity by each species.
@@ -13,7 +13,9 @@ Depends:
 Imports:
     reshape2,
     ggpubr,
+    chaoUtility,
     ggplot2,
-Remotes:
-    github::chaolab2019/chaoUtility
+    tibble,
+    stats
+Remotes: chaolab2019/chaoUtility
 RoxygenNote: 6.1.1
